@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AIMerit</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ══════════════════ LANDING SCREEN ══════════════════ -->
+  <div id="screen-landing" class="screen active">
+    <div class="landing-bg">
+      <div class="landing-glow"></div>
+    </div>
+    <div class="landing-content">
+      <div class="landing-icon">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="6" width="36" height="46" rx="4" fill="#E5E5EA" stroke="#D1D1D6" stroke-width="1.5"/>
+          <rect x="18" y="6" width="28" height="46" rx="4" fill="#FFFFFF" stroke="#D1D1D6" stroke-width="1.5"/>
+          <line x1="24" y1="22" x2="38" y2="22" stroke="#C8102E" stroke-width="2" stroke-linecap="round"/>
+          <line x1="24" y1="29" x2="38" y2="29" stroke="#C8102E" stroke-width="2" stroke-linecap="round" opacity="0.55"/>
+          <line x1="24" y1="36" x2="32" y2="36" stroke="#C8102E" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+          <circle cx="48" cy="48" r="12" fill="#C8102E"/>
+          <path d="M44 48l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1 class="landing-title">AIMerit</h1>
+      <p class="landing-tagline">Scan, extract, and send documents in seconds</p>
+
+      <ul class="landing-features">
+        <li>
+          <span class="feature-icon">&#9654;</span>
+          Point your camera at any document
+        </li>
+        <li>
+          <span class="feature-icon">&#10024;</span>
+          AI extracts formula number &amp; date automatically
+        </li>
+        <li>
+          <span class="feature-icon">&#128196;</span>
+          Save as PDF and send by email instantly
+        </li>
+      </ul>
+
+      <button id="btn-start" class="btn btn-primary btn-start">
+        Start Scanning
+      </button>
+      <p class="landing-hint">Camera access will be requested</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════ SCANNING SCREEN ══════════════════ -->
+  <div id="screen-scanning" class="screen">
+    <div class="camera-wrapper">
+      <video id="camera-feed" autoplay playsinline muted></video>
+      <canvas id="overlay-canvas"></canvas>
+      <div id="shutter-flash"></div>
+      <div id="page-preview" class="hidden">
+        <div id="preview-stack"></div>
+      </div>
+      <div id="camera-error" class="camera-error hidden">
+        <p>Camera unavailable.</p>
+        <p>Make sure you're using HTTPS and have granted camera permission.</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <span id="page-count" class="page-count">Pages: 0</span>
+      <button id="btn-clear" class="btn btn-danger" disabled>Clear</button>
+      <button id="btn-retake" class="btn btn-secondary" disabled>Retake</button>
+      <button id="btn-save" class="btn btn-primary">Take</button>
+      <button id="btn-done" class="btn btn-success" disabled>Process</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PREVIEW MODAL ══════════════════ -->
+  <div id="preview-modal" class="hidden">
+    <button id="modal-close" aria-label="Close">&#10005;</button>
+    <div id="modal-img-wrap">
+      <img id="modal-img" alt="">
+    </div>
+    <div id="modal-footer">
+      <button id="modal-prev" class="modal-nav" aria-label="Previous">&#8592;</button>
+      <span id="modal-counter"></span>
+      <button id="modal-next" class="modal-nav" aria-label="Next">&#8594;</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ REVIEWING OCR SCREEN ══════════════════ -->
+  <div id="screen-reviewing" class="screen">
+    <div class="review-header">
+      <h1>Review Document</h1>
+      <p class="subtitle">Verify or correct the extracted information below.</p>
+    </div>
+
+    <div id="spinner" class="spinner hidden">
+      <div class="spinner-ring"></div>
+      <p>Analysing document…</p>
+    </div>
+
+    <div id="ocr-results" class="form-body">
+      <label class="field-label">
+        Formula Number
+        <input type="text" id="field-formula" class="field-input"
+               placeholder="e.g. F-1234 or Formula #5678" autocomplete="off">
+      </label>
+      <label class="field-label">
+        Date
+        <input type="text" id="field-date" class="field-input"
+               placeholder="e.g. 01/15/2025" autocomplete="off">
+      </label>
+      <p id="ocr-hint" class="hint hidden"></p>
+    </div>
+
+    <div class="toolbar">
+      <button id="btn-back-scan" class="btn btn-secondary">Back</button>
+      <button id="btn-confirm" class="btn btn-primary">Confirm</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════ PDF READY SCREEN ══════════════════ -->
+  <div id="screen-pdf-ready" class="screen">
+    <div class="ready-header">
+      <div class="checkmark">&#10003;</div>
+      <h1>Document Ready</h1>
+      <p id="pdf-filename" class="pdf-filename"></p>
+    </div>
+
+    <div class="actions-body">
+      <a id="btn-download" class="btn btn-primary full-width" download>
+        Download PDF
+      </a>
+
+      <div class="divider">or send via email</div>
+
+      <div class="email-section">
+        <input type="email" id="field-email" class="field-input"
+               placeholder="Recipient email address" autocomplete="email">
+        <button id="btn-send-email" class="btn btn-secondary full-width">
+          Send Email
+        </button>
+        <p id="email-status" class="email-status"></p>
+      </div>
+
+      <button id="btn-scan-more" class="btn btn-success full-width">
+        Scan More Documents
+      </button>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

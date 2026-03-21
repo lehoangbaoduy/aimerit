@@ -1,0 +1,8 @@
+.env
+exports/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.pem
