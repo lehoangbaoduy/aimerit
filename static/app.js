@@ -244,7 +244,7 @@ function capturePage() {
     document.getElementById('btn-retake').disabled = false;
     document.getElementById('btn-clear').disabled  = false;
     document.getElementById('btn-done').disabled   = false;
-  }, 'image/jpeg', 0.92);
+  }, 'image/jpeg', 0.97);
 }
 
 function retakePage() {

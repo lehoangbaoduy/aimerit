@@ -37,8 +37,8 @@ def generate_pdf(
             page_h_mm = min(page_w_mm * aspect, 297.0)
             pdf.add_page(format=(page_w_mm, page_h_mm))
 
-            with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as tmp:
-                img.save(tmp.name, "JPEG", quality=90)
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                img.save(tmp.name, "PNG")
                 tmp_paths.append(tmp.name)
 
             pdf.image(tmp_paths[-1], x=0, y=0, w=page_w_mm, h=page_h_mm)
