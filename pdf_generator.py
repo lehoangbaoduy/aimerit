@@ -4,7 +4,7 @@ import tempfile
 import os
 
 from fpdf import FPDF
-from PIL import Image
+from PIL import Image, ImageEnhance, ImageFilter
 
 
 def _safe_name(value: str) -> str:
@@ -30,6 +30,12 @@ def generate_pdf(
             img = Image.open(io.BytesIO(img_bytes))
             if img.mode not in ("RGB", "L"):
                 img = img.convert("RGB")
+
+            # Document enhancement: brightness, contrast, sharpness
+            img = ImageEnhance.Brightness(img).enhance(1.1)
+            img = ImageEnhance.Contrast(img).enhance(1.25)
+            img = img.filter(ImageFilter.UnsharpMask(radius=1.5, percent=150, threshold=3))
+
             w_px, h_px = img.size
             aspect = h_px / w_px
 
