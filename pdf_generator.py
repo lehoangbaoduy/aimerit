@@ -33,7 +33,7 @@ def generate_pdf(
 
             # Document enhancement: brightness, contrast, sharpness
             img = ImageEnhance.Brightness(img).enhance(1.1)
-            img = ImageEnhance.Contrast(img).enhance(1.25)
+            img = ImageEnhance.Contrast(img).enhance(1.5)
             img = img.filter(ImageFilter.UnsharpMask(radius=1.5, percent=150, threshold=3))
 
             w_px, h_px = img.size
